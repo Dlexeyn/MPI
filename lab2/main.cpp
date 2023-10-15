@@ -17,17 +17,23 @@ int main(int argc, char *argv[]) {
 
     int size;
     int rank;
+    double start = 0, end = 0;
 
     const int ROOT = 0;
+
+    int localMin;
+    int globalMin;
+    int *A;
+    int arraySize = 0;
 
     MPI_Init(&argc, &argv);
 
     MPI_Comm_size(MPI_COMM_WORLD, &size);
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-    int localMin;
-    int globalMin;
-    int *A;
-    int arraySize = 0;
+
+
+    MPI_Barrier(MPI_COMM_WORLD);
+    start = MPI_Wtime();
 
     if (rank == ROOT) {
         int numWorkProcs = size - 1;
@@ -48,8 +54,8 @@ int main(int argc, char *argv[]) {
         for (int i = 0; i < arraySize; i++)
             A[i] = 1 + rand() % 10;
 
-        printf("Сгенерированный массив:\n");
-        printArray(A, arraySize);
+//        printf("Сгенерированный массив:\n");
+//        printArray(A, arraySize);
 
         std::list<int> useIndexes;
         std::map<int, int> indexMap;
@@ -150,12 +156,10 @@ int main(int argc, char *argv[]) {
         for(int i = 0; i < localSize; i++){
             localArray[i] -= localMin;
         }
-        printf("\nMin for P%d is %d.\n", rank, localMin);
-        printf("P%d get array with size: %d\n", rank, localSize);
-        printf("P%d set:\n", rank);
-        printArray(localArray, localSize);
-
-
+//        printf("\nMin for P%d is %d.\n", rank, localMin);
+//        printf("P%d get array with size: %d\n", rank, localSize);
+//        printf("P%d set:\n", rank);
+        //printArray(localArray, localSize);
 
         // Отправка данных назад
         MPI_Send(&localSize,
@@ -182,12 +186,18 @@ int main(int argc, char *argv[]) {
                ROOT,
                MPI_COMM_WORLD);
 
-    if (rank == ROOT){
-        printf("\nGlobal min: %d\n", globalMin);
-        printArray(A, arraySize);
-    }
+    MPI_Barrier(MPI_COMM_WORLD);
+    end = MPI_Wtime();
 
     MPI_Finalize();
+
+
+    if (rank == ROOT){
+//        printf("\nGlobal min: %d\n", globalMin);
+//        printArray(A, arraySize);
+        printf("%f\n", end - start);
+    }
+
     return 0;
 }
 
