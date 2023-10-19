@@ -54,8 +54,8 @@ int main(int argc, char *argv[]) {
         for (int i = 0; i < arraySize; i++)
             A[i] = 1 + rand() % 10;
 
-//        printf("Сгенерированный массив:\n");
-//        printArray(A, arraySize);
+        printf("Сгенерированный массив:\n");
+        printArray(A, arraySize);
 
         std::list<int> useIndexes;
         std::map<int, int> indexMap;
@@ -156,10 +156,10 @@ int main(int argc, char *argv[]) {
         for(int i = 0; i < localSize; i++){
             localArray[i] -= localMin;
         }
-//        printf("\nMin for P%d is %d.\n", rank, localMin);
-//        printf("P%d get array with size: %d\n", rank, localSize);
-//        printf("P%d set:\n", rank);
-        //printArray(localArray, localSize);
+        printf("\nMin for P%d is %d.\n", rank, localMin);
+        printf("P%d get array with size: %d\n", rank, localSize);
+        printf("P%d set:\n", rank);
+        printArray(localArray, localSize);
 
         // Отправка данных назад
         MPI_Send(&localSize,
@@ -193,8 +193,8 @@ int main(int argc, char *argv[]) {
 
 
     if (rank == ROOT){
-//        printf("\nGlobal min: %d\n", globalMin);
-//        printArray(A, arraySize);
+        printf("\nGlobal min: %d\n", globalMin);
+        printArray(A, arraySize);
         printf("%f\n", end - start);
     }
 
